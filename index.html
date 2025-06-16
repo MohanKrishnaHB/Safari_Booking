@@ -173,6 +173,19 @@
         
     </div>
 
+    <!-- Spinner Modal -->
+    <div class="modal fade" id="spinnerModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-transparent border-0 shadow-none">
+          <div class="d-flex justify-content-center align-items-center" style="height: 150px;">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
         // Populate dropdowns 1-25 and 1-3
         const fillSelect = (id, max) => {
@@ -319,9 +332,26 @@
             document.getElementById("payment-info").style.display = 'block';
         }
 
+        function showSpinner() {
+            var spinnerModal = new bootstrap.Modal(document.getElementById('spinnerModal'), {
+                backdrop: 'static',
+                keyboard: false
+            });
+            spinnerModal.show();
+            // Store reference for later hide
+            window._spinnerModal = spinnerModal;
+        }
+
+        function hideSpinner() {
+            if (window._spinnerModal) {
+                window._spinnerModal.hide();
+                window._spinnerModal = null;
+            }
+        }
+
         function submitForm() {
-            //alert("Submitted! Integration to Google Sheets goes here.");
             event.preventDefault();
+            showSpinner();
             const now = new Date();
             const data = {
                 timestamp: now.toLocaleString(),
@@ -351,15 +381,18 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
             })
-            .then(response => response.json())
+            .then(response => console.log(response))
             .then(result => {
+                hideSpinner();
                 alert("Booking submitted successfully!");
             })
             .catch(error => {
+                hideSpinner();
                 alert("Error submitting booking: " + error);
             });
             // Google Sheets integration via Apps Script or API
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
