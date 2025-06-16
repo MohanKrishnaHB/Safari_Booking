@@ -291,8 +291,8 @@
 
             
             let cash = 0, upi = 0, online = 0;
-            if (method === 'Offline' || method === 'JLR') cash = total;
-            else if (method === 'Online') online = total;
+            if (method === 'Online') online = total;
+            else cash = total;
 
             document.getElementById("cash").value = cash;
             document.getElementById("upi").value = upi;
