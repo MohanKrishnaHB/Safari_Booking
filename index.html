@@ -266,6 +266,7 @@
 
         function calculateBill() {
             const method = document.querySelector("input[name='bookingMethod']:checked").value;
+            const vehicalType = document.querySelector("input[name='vehicleType']:checked")?.value;
 
             const getVal = id => parseInt(document.getElementById(id)?.value || 0);
             const normalPrices = {
@@ -279,18 +280,35 @@
                 dslr200: 1180,
                 dslr500: 1770
             };
-            const roomSafariPrices = {
-                indianAdult: 150,
-                indianChild: 150,
-                foreignAdult: 150,
-                foreignChild: 150,
+            const jeepSafariPrices = {
+                indianAdult: 1000,
+                indianChild: 1000,
+                foreignAdult: 1000,
+                foreignChild: 1000,
                 car: 59,
                 miniBus: 118,
                 bus: 177,
                 dslr200: 1180,
                 dslr500: 1770
             };
-            const prices = method === "Room Safari" ? roomSafariPrices : normalPrices;
+            const roomSafariPrices = {
+                indianAdult: 300,
+                indianChild: 300,
+                foreignAdult: 300,
+                foreignChild: 300,
+                car: 59,
+                miniBus: 118,
+                bus: 177,
+                dslr200: 1180,
+                dslr500: 1770
+            };
+            var prices
+            if(method === "Room Safari")
+                prices = roomSafariPrices
+            else if(vehicalType === "Jeep")
+                prices = jeepSafariPrices;
+            else
+                prices = normalPrices;
             let total =
                 getVal("indianAdults") * prices.indianAdult +
                 getVal("indianChildren") * prices.indianChild +
