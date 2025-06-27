@@ -10,6 +10,7 @@
     .bill { background-color: #fff; padding: 20px; border: 1px solid #ccc; margin-top: 20px; }
     .error-border { border: 2px solid red !important; }
   </style>
+  
 </head>
 <body class="bg-light">
 <div class="container py-4">
@@ -22,8 +23,8 @@
       </div>
       <div class="col-md-4">
         <label for="Guest type" class="form-label required">Guest type</label>
-        <select class="form-select" id="bookingMethod" name="bookingMethod" required>
-          <option value="public" selected>Public</option>
+        <select class="form-select" id="guestType" name="guestType" required>
+          <option value="Public" selected>Public</option>
           <option value="forest official onduty">Forest official onduty</option>
           <option value="forest official ofduty">Forest official ofduty</option>
           <option value="other officials">Other officials</option>
@@ -87,87 +88,31 @@
         <label class="form-check-label" for="dormatory">Dormitory Room - ₹2688</label>
       </div>
     </div>
-    <h5 class="mt-4">Parking charges</h5>
-    <div class="mb-3">
-      <div class="form-check">
-        <input class="form-check-input room" type="checkbox" id="jeep">
-        <label class="form-check-label" for="jeep">Jeep - ₹118</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input room" type="checkbox" id="car">
-        <label class="form-check-label" for="car">Car - ₹118</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input room" type="checkbox" id="lcv">
-        <label class="form-check-label" for="lcv">Lcv - ₹238</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input room" type="checkbox" id="tt">
-        <label class="form-check-label" for="tt">TT - ₹238</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input room" type="checkbox" id="jeep">
-        <label class="form-check-label" for="jeep">Bus - ₹354</label>
-      </div>
-    <h5 class="mt-4">Payment</h5>
-    <div class="row mb-3">
-      <div class="col-md-3">
-        <label>Amount paid through Cash</label>
-        <input type="number" class="form-control pay-field" id="cash" value="0">
-      </div>
-      <div class="col-md-3">
-        <label>Amount paid through UPI</label>
-        <input type="number" class="form-control pay-field" id="upi" value="0">
-      </div>
-      <div class="col-md-3">
-        <label>Transaction Reference</label>
-        <input type="text" class="form-control" id="txn">
-      </div>
-      <div class="col-md-3">
-        <label>Amount paid through Online Booking</label>
-        <input type="number" class="form-control pay-field" id="online" value="0">
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <label>Comments</label>
-      <textarea class="form-control" id="comments" rows="2"></textarea>
-    </div>
-
-    <div class="mb-3">
-      <label>Total Amount</label>
-      <input type="number" class="form-control" id="total" readonly>
-    </div>
-
-    <div class="text-center">
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
+    
   </form>
 
-  <table class="table" style="display: none;" id="bill">
+  <table class="table" id="bill">
     <tr>
       <th>Item</th>
       <th>Quantity</th>
       <th>Unit Price</th>
       <th>Price</th>
     </tr>
-    <tr>
-      <tr><th colspan="4">Additional charges</th></tr>
       <td>Cars</td>
       <td><span id="car-qty"></span></td>
-      <td>59</td>
+      <td>118</td>
       <td><span id="car-price"></span></td>
     </tr>
     <tr>
       <td>mini bus</td>
       <td><span id="mini-qty"></span></td>
-      <td>118</td>
+      <td>238</td>
       <td><span id="mini-price"></span></td>
     </tr>
     <tr>
       <td>bus</td>
       <td><span id="bus-qty"></span></td>
-      <td>177</td>
+      <td>354</td>
       <td><span id="bus-price"></span></td>
     </tr>
     <tr>
@@ -206,15 +151,40 @@
     </tr>
   </table>
 </div>
+<div class="container py-4">
+
+<h5 class="mt-4">Payment</h5>
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <label>Amount paid through Cash</label>
+        <input type="number" class="form-control pay-field" id="cash" value="0">
+      </div>
+      <div class="col-md-3">
+        <label>Amount paid through UPI</label>
+        <input type="number" class="form-control pay-field" id="upi" value="0">
+      </div>
+      <div class="col-md-3">
+        <label>Transaction Reference</label>
+        <input type="text" class="form-control" id="txn">
+      </div>
+    </div>
+    <div class="mb-3">
+      <label>Comments</label>
+      <textarea class="form-control" id="comments" rows="2"></textarea>
+    </div>
+    <div class="mt-3 text-end">
+       <button class="btn btn-success" id="submitSave">Submit & Save</button>
+    </div>
+</div>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("date").valueAsDate = new Date();
 
     const calcTotal = () => {
-      const car = parseInt(document.getElementById("cars").value) * 59;
-      const minibus = parseInt(document.getElementById("minibus").value) * 89;
-      const bus = parseInt(document.getElementById("bus").value) * 119;
+      const car = parseInt(document.getElementById("cars").value) * 118;
+      const minibus = parseInt(document.getElementById("minibus").value) * 238;
+      const bus = parseInt(document.getElementById("bus").value) * 354;
 
       let roomTotal = 0;
       document.querySelectorAll('.room:checked').forEach(cb => {
@@ -222,7 +192,7 @@
       });
 
       const total = car + minibus + bus + roomTotal;
-      document.getElementById("total").value = total;
+      document.getElementById("total-price").value = total;
       return total;
     };
 
@@ -231,24 +201,24 @@
     });
 
     // Attach submit event handler properly
-    document.getElementById("bookingForm").addEventListener("submit", showBill);
+    document.querySelector("#bookingForm").addEventListener("change",showBill);
   });
-
-
-
 
   function showBill(e) {
     e.preventDefault();
 
-
     // show bill
     var billElement = document.getElementById("bill");
     billElement.style.display = "table";
-
+    var guestType = document.getElementById("guestType").value;
     // collect details filled in form
     var numberOfcars = parseInt(document.getElementById("cars").value);    
     // define unit price
-    const unitPriceForCar = 59;
+    var unitPriceForCar = 118;
+    if(guestType != "Public") {
+      unitPriceForCar = 0;
+    } 
+
     // compute car total price
     const carPrice = unitPriceForCar * numberOfcars;
     var carQtyEle = document.getElementById("car-qty");
@@ -259,7 +229,11 @@
     // collect details filled in form
     var numberOfminibus = parseInt(document.getElementById("minibus").value);
     // define unit price
-    const unitPriceForminibus = 118;
+    var unitPriceForminibus = 238;
+    if(guestType != "Public") {
+      unitPriceForminibus = 0;
+    }
+
     // compute car total price
     const minibusPrice = unitPriceForminibus * numberOfminibus;
     var minibusQtyEle = document.getElementById("mini-qty");
@@ -271,7 +245,10 @@
     // collect details filled in form
     var numberOfbus = parseInt(document.getElementById("bus").value);
     // define unit price
-    const unitPriceForbus = 177;
+    var unitPriceForbus = 354;
+    if(guestType != "Public") {
+      unitPriceForbus = 0;
+    }
     // compute car total price
     const busPrice = unitPriceForbus * numberOfbus;
     var busQtyEle = document.getElementById("bus-qty");
@@ -286,10 +263,21 @@
     if (document.getElementById("kaveri1").checked) {
       kaveriroom1Price = 2800;
       numberOfkaveriroom1 = 1;
+      if(guestType.toLowerCase() == " Forest official onduty".toLowerCase()) {
+        kaveriroom1Price = 140;
+      }
+      else if(guestType=="other officials"){
+              kaveriroom1Price = 375;
+      }
+      else if(guestType.toLowerCase() == "Forest official ofduty".toLowerCase()) {
+             kaveriroom1Price = 250;
+      }
+
     } else {
         kaveriroom1Price = 0;
       numberOfkaveriroom1 = 0;
     }
+
     // compute car total price
     var kaveriroom1QtyEle = document.getElementById("kaveri1-qty");
     kaveriroom1QtyEle.innerHTML = numberOfkaveriroom1;
@@ -302,6 +290,16 @@
     if (document.getElementById("kaveri2").checked) {
        kaveriroom2Price = 2800;
        numberOfkaveriroom2 = 1;
+       if(guestType.toLowerCase() == "Forest official onduty".toLowerCase()) {
+        kaveriroom2Price = 140;
+      }
+      else if(guestType=="other officials"){
+              kaveriroom2Price = 375;
+      }
+      else if(guestType.toLowerCase() == "Forest official ofduty".toLowerCase()) {
+             kaveriroom2Price = 250;
+      }
+
     } else {
          kaveriroom2Price = 0;
         numberOfkaveriroom2 = 0;
@@ -317,6 +315,16 @@
     if (document.getElementById("gangotry1").checked) {
        gangotryroom1Price = 2464;
        numberOfgangotryroom1 = 1;
+       if(guestType.toLowerCase() == "Forest official onduty".toLowerCase()) {
+        gangotryroom1Price = 100;
+      }
+      else if(guestType=="other officials"){
+              kaveriroom1Price = 300;
+      }
+      else if(guestType.toLowerCase() == "Forest official ofduty".toLowerCase()) {
+             kaveriroom1Price = 200;
+      }
+
     } else {
          gangotryroom1Price = 0;
          numberOfgangotryroom1 = 0;
@@ -333,6 +341,16 @@
     if (document.getElementById("gangotry2").checked) {
        gangotryroom2Price = 2464;
        numberOfgangotryroom2 = 1;
+       if(guestType.toLowerCase() == "Forest official onduty".toLowerCase()) {
+        kaveriroom1Price = 100;
+      }
+      else if(guestType=="other officials"){
+              kaveriroom1Price = 300;
+      }
+      else if(guestType.toLowerCase() == "Forest official ofduty".toLowerCase()) {
+             kaveriroom1Price = 200;
+      }
+
     } else {
        gangotryroom2Price = 0;
        numberOfgangotryroom2 = 0;
@@ -365,10 +383,17 @@
     var totalQtyEle = document.getElementById("total-price");
     totalQtyEle.innerHTML = totalprice;
 
-
-    
-
+    //cash
+    var amountpaidEle = document.getElementById("cash");
+    amountpaidEle.value = totalprice;
+  
   }
+  function submitForm(){
+    alert("hi")
+    
+  }
+  
+  document.querySelector("#submitSave").addEventListener("click",submitForm);
 </script>
 </body>
 </html>
