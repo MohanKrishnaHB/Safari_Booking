@@ -10,7 +10,6 @@
     .bill { background-color: #fff; padding: 20px; border: 1px solid #ccc; margin-top: 20px; }
     .error-border { border: 2px solid red !important; }
   </style>
-  
 </head>
 <body class="bg-light">
 <div class="container py-4">
@@ -98,6 +97,13 @@
       <th>Unit Price</th>
       <th>Price</th>
     </tr>
+    <tr>
+      <td>entry fees</td>
+      <td><span id="entry-qty"></span></td>
+      <td>300</td>
+      <td><span id="entry-price"></span></td>
+    </tr>
+    <tr>
       <td>Cars</td>
       <td><span id="car-qty"></span></td>
       <td>118</td>
@@ -144,6 +150,12 @@
       <td><span id="dor-qty"></span></td>
       <td>2688</td>
       <td><span id="dor-price"></span></td>
+    </tr>
+    <tr>
+      <td>cleaning charges</td>
+      <td></td>
+      <td>50</td>
+      <td><span id="cleaning-price"></span></td>
     </tr>
     <tr>
       <th colspan="3">Total</th>
@@ -211,6 +223,17 @@
     var billElement = document.getElementById("bill");
     billElement.style.display = "table";
     var guestType = document.getElementById("guestType").value;
+
+    var entryFees = parseInt(document.getElementById("guestCount").value);
+    // define unit price
+    var unitentryFees = 300;
+    // compute car total price
+    const totalentryfees = entryFees * unitentryFees;
+    var entryQtyEle = document.getElementById("entry-qty");
+    entryQtyEle.innerHTML = entryFees;
+    var entrypriceEle = document.getElementById("entry-price");
+    entrypriceEle.innerHTML = totalentryfees;
+
     // collect details filled in form
     var numberOfcars = parseInt(document.getElementById("cars").value);    
     // define unit price
@@ -263,7 +286,7 @@
     if (document.getElementById("kaveri1").checked) {
       kaveriroom1Price = 2800;
       numberOfkaveriroom1 = 1;
-      if(guestType.toLowerCase() == " Forest official onduty".toLowerCase()) {
+      if(guestType.toLowerCase() =="Forest official onduty".toLowerCase()) {
         kaveriroom1Price = 140;
       }
       else if(guestType=="other officials"){
@@ -290,7 +313,7 @@
     if (document.getElementById("kaveri2").checked) {
        kaveriroom2Price = 2800;
        numberOfkaveriroom2 = 1;
-       if(guestType.toLowerCase() == "Forest official onduty".toLowerCase()) {
+       if(guestType.toLowerCase() =="Forest official onduty".toLowerCase()) {
         kaveriroom2Price = 140;
       }
       else if(guestType=="other officials"){
@@ -319,10 +342,10 @@
         gangotryroom1Price = 100;
       }
       else if(guestType=="other officials"){
-              kaveriroom1Price = 300;
+              gangotryroom1Price = 300;
       }
       else if(guestType.toLowerCase() == "Forest official ofduty".toLowerCase()) {
-             kaveriroom1Price = 200;
+             gangotryroom1Price = 200;
       }
 
     } else {
@@ -342,13 +365,14 @@
        gangotryroom2Price = 2464;
        numberOfgangotryroom2 = 1;
        if(guestType.toLowerCase() == "Forest official onduty".toLowerCase()) {
-        kaveriroom1Price = 100;
+        gangotryroom24Price = 100;
       }
       else if(guestType=="other officials"){
-              kaveriroom1Price = 300;
+        gangotryroom2Price = 300;
+               
       }
       else if(guestType.toLowerCase() == "Forest official ofduty".toLowerCase()) {
-             kaveriroom1Price = 200;
+             gangotryroom2Price = 200;
       }
 
     } else {
@@ -378,8 +402,13 @@
     var dormatoryroomQtyEle = document.getElementById("dor-price");
     dormatoryroomQtyEle.innerHTML = dormatoryroomPrice;
 
+    //cleaning
+    var totalcleaningPrice = 50;
+    var cleaningPriceEle = document.getElementById("cleaning-price");
+    cleaningPriceEle.innerHTML = totalcleaningPrice;
+
     //total
-    totalprice= carPrice+ minibusPrice+busPrice+ kaveriroom1Price+kaveriroom2Price+gangotryroom1Price+gangotryroom2Price+dormatoryroomPrice
+    totalprice= totalentryfees+carPrice+ minibusPrice+busPrice+ kaveriroom1Price+kaveriroom2Price+gangotryroom1Price+gangotryroom2Price+dormatoryroomPrice+totalcleaningPrice
     var totalQtyEle = document.getElementById("total-price");
     totalQtyEle.innerHTML = totalprice;
 
@@ -389,11 +418,43 @@
   
   }
   function submitForm(){
-    alert("hi")
-    
+    var booking_obj = {
+        date:document.getElementById("date").value,
+        name:document.getElementById("guestName").value,
+        numberOfGuest:document.getElementById("guestCount").value,
+        guestType:document.getElementById("guestType").value,
+        numberOfcars:document.getElementById("cars").value,
+        numberOfminibus:document.getElementById("minibus").value,
+        numberOfbus:document.getElementById("bus").value,
+        kaveriroom1:document.getElementById("kaveri1-price").innerHTML,
+        kaveriroom2:document.getElementById("kaveri2-price").innerHTML,
+        gangotryroom1:document.getElementById("gangotry1-price").innerHTML,
+        gangotryroom2:document.getElementById("gangotry2-price").innerHTML,
+        dormatoryroom:document.getElementById("dor-price").innerHTML,
+        totalprice:document.getElementById("total-price").innerHTML,
+        cash:document.getElementById("cash").value,
+        upi:document.getElementById("upi").value,
+        comments:document.getElementById("comments").value
+}
+
+console.log(booking_obj);
+
+fetch("https://hook.eu2.make.com/pf3vb4cfdspawy7m4k57fkt5fotgfxl5", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(booking_obj)
+            })
+            .then(result => {
+                
+                alert("Booking submitted successfully!");
+            })
+            .catch(error => {
+                
+                alert("Error submitting booking: " + error);
+            });
   }
-  
   document.querySelector("#submitSave").addEventListener("click",submitForm);
+  
 </script>
 </body>
 </html>
